@@ -1,9 +1,20 @@
 rule all:
     input:
+        "results/qc/nanostat_report.txt",
         "results/qc/read_stats.csv",
         "results/plots/read_length_distribution.png",
         "results/plots/gc_content_distribution.png",
         "results/plots/quality_distribution.png"
+
+rule nanostat:
+    input:
+        fastq = "data/barcode77.fastq"
+    output:
+        report = "results/qc/nanostat_report.txt"
+    log:
+        "logs/nanostat.log"
+    shell:
+        "NanoStat --fastq {input.fastq} > {output.report} 2> {log}"
 
 rule qc_analysis:
     input:
