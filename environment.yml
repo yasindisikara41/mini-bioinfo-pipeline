@@ -1,0 +1,13 @@
+name: mini-bioinfo-pipeline
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - python=3.10
+  - snakemake=7.32.4
+  - r-base=4.3.1
+  - bioconductor-biostrings
+  - bioconductor-shortread
+  - r-tidyverse
+  - r-ggplot2
