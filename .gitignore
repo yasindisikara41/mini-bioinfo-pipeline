@@ -1,0 +1,5 @@
+data/barcode77.fastq
+.DS_Store
+.RData
+.Rhistory
+.snakemake/
