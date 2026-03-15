@@ -1,9 +1,1 @@
-data/barcode77.fastq
-.DS_Store
-.RData
-.Rhistory
-.snakemake/
-results/qc/read_stats.csv
-.DS_Store
-.Rhistory
-.snakemake/
+**/.DS_Store
