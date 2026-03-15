@@ -1,40 +1,33 @@
 # Mini Bioinformatics Pipeline
 
-A reproducible QC pipeline for long-read sequencing data using R and Snakemake.
+This is a QC pipeline I built for long-read sequencing data. It takes a raw FASTQ file, calculates per-read statistics, and generates distribution plots.
+
+## What it does
+
+The pipeline has two main steps:
+- `qc_analysis.R` reads the FASTQ file in chunks (to avoid memory issues), calculates GC content, read length, and mean quality score for each read, and saves everything to a CSV file.
+- `visualize.R` takes that CSV and generates three distribution plots plus summary statistics.
+
+Snakemake is used to connect the two steps together.
 
 ## Requirements
 
-- R (>= 4.4)
-- Python (>= 3.10)
-- Snakemake (`pip install snakemake`)
-- R packages: `Biostrings`, `ShortRead`, `tidyverse`
+- R >= 4.4 with Biostrings, ShortRead, tidyverse
+- Python >= 3.10
+- Snakemake
 
-## Installation
-```bash
-git clone https://github.com/yasindisikara41/mini-bioinfo-pipeline.git
-cd mini-bioinfo-pipeline
-```
+You can set up the environment with:
 
-Install R packages:
-```r
-install.packages("BiocManager")
-BiocManager::install(c("Biostrings", "ShortRead"))
-install.packages("tidyverse")
-```
+    conda env create -f environment.yml
+    conda activate mini-bioinfo-pipeline
 
-## Usage
+## How to run
 
-Place your FASTQ file in the `data/` folder, then run:
-```bash
-snakemake --cores 1
-```
+Put your FASTQ file in the `data/` folder and run:
 
-## Pipeline Steps
+    snakemake --cores 1
 
-1. **qc_analysis.R** — Reads the FASTQ file in chunks, calculates GC content, read length, and mean quality score for each read. Saves results to `results/qc/read_stats.csv`.
-2. **visualize.R** — Generates distribution plots for all three metrics. Saves plots to `results/plots/`.
-
-## Results Summary (barcode77)
+## Results (barcode77)
 
 | Metric | Mean | Median |
 |---|---|---|
@@ -42,30 +35,22 @@ snakemake --cores 1
 | GC Content (%) | 53.0 | 53.5 |
 | Mean Quality Score | 17.9 | 17.3 |
 
-## Email to Professor Kılıç
+## Email to Professor Kilic
 
-**To:** Prof. Dr. Kılıç  
-**Subject:** Long-Read Sequencing QC Report – barcode77
+**To:** Prof. Dr. Kilic  
+**Subject:** QC Results – barcode77 Sequencing Data
 
-Dear Professor Kılıç,
+Dear Professor Kilic,
 
-I have completed the quality control analysis of the raw sequencing data you provided (barcode77). Here is a plain-language summary of what I did and what the results show.
+I've finished the quality control analysis on the barcode77 dataset. Here's a quick summary of what I found.
 
-**What I did:**  
-I wrote an automated pipeline that reads the raw sequencing file and calculates three key metrics for each of the 81,011 reads: read length, GC content, and quality score. I then generated distribution plots for each metric.
+I processed all 81,011 reads and looked at three things: how long the reads are, their GC content, and their quality scores.
 
-**What the results show:**
+The read lengths are pretty spread out — the median is around 547 bp but there are some reads going up to 686,000 bp, which is normal for Oxford Nanopore data. The GC content sits at about 53%, which looks fine biologically. The average quality score came out at Q17.9, which is a bit below the Q20 cutoff but honestly pretty typical for ONT runs using the HAC basecalling model.
 
-- **Read Length:** The average read length is ~1,038 base pairs, with a median of 547 bp. This is typical for Oxford Nanopore long-read data. There are some very long reads (up to ~686,000 bp), which is a known characteristic of this technology.
+Based on this, I think the data is good enough to move forward with alignment. I'd suggest using Minimap2. If you want to be more conservative, we could filter out reads below Q20 first, but I don't think it's strictly necessary here.
 
-- **GC Content:** The average GC content is 53%, which is within the normal biological range (40–60%). This suggests no major contamination or bias in the sequencing run.
+Let me know if you'd like me to look at anything else or if you have questions about the plots.
 
-- **Quality Score:** The average Phred quality score is Q17.9, which means roughly 1 error per 63 bases. While this is slightly below the Q20 threshold (1 error per 100 bases) commonly used as a cutoff, it is acceptable for Oxford Nanopore data sequenced with the HAC basecalling model.
-
-**Recommendation:**  
-The data quality is sufficient to proceed to alignment. I recommend using Minimap2 for alignment against the reference genome, followed by variant calling. If higher accuracy is required, the reads could be filtered to retain only those with Q≥20 before alignment.
-
-Please let me know if you have any questions.
-
-Best regards,  
+Best,  
 Yasin Dişikara
