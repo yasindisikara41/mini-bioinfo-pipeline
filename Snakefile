@@ -1,3 +1,6 @@
+# Long-read sequencing QC pipeline
+# Adimlar: NanoStat QC -> per-read istatistik (R) -> gorsellestirme (R)
+
 rule all:
     input:
         "results/qc/nanostat_report.txt",
